@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--Background-->
+    <SolidColorBrush x:Key="NormalBackground" Color="#FF30303A"/>
+    
+    <!--Button-->
+    <SolidColorBrush x:Key="ButtonBackground" Color="#FF40404E"/>
+    <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#FF282831"/>
+    <SolidColorBrush x:Key="ButtonHighlightBackground" Color="#FF5F5F73"/>
+    <SolidColorBrush x:Key="ButtonPressBackground" Color="#FF4E4E5D"/>
+
+    <!--Toggle-->
+    <SolidColorBrush x:Key="ImageToggleChecked" Color="#FF4A4A5A"/>
+
+    <!--Text-->
+    <SolidColorBrush x:Key="NormalTextColour" Color="#FFE4E4E4"/>
+
+    <!--MenuItem-->
+    <SolidColorBrush x:Key="MenuItemBorder" Color="#595959"/>
+
+    <!--Caption-->
+    <SolidColorBrush x:Key="CaptionHighlightBackground" Color="#FF40404C"/>
+    <SolidColorBrush x:Key="CaptionNormalText" Color="#FFC1C1C1"/>
+    <SolidColorBrush x:Key="CaptionHighlightText" Color="#FFE0E0E0"/>
+</ResourceDictionary>

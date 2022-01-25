@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# CS8601: Possible null reference assignment.
+dotnet_diagnostic.CS8601.severity = none
+
+# CS8618: Non nullable field _name is not initialized. Consider declare the field as nullable type
+dotnet_diagnostic.CS8618.severity = none
+
+[*.{cs,vb}]
+dotnet_style_null_propagation=true:suggestion

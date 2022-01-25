@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="KEKWSoundboard.Components.EntityButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KEKWSoundboard.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="256" d:DesignWidth="256">
+    <Grid>
+        <Border x:Name="borderMask" BorderThickness="4,4,4,4" CornerRadius="5,5,5,5" BorderBrush="#FF803A3A">
+            <Grid x:Name="maskedGrid">
+                <Button x:Name="mainButton" Style="{StaticResource NormalButton}">
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
