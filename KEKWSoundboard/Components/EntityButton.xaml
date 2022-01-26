@@ -7,10 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="256" d:DesignWidth="256">
     <Grid>
-        <Border x:Name="borderMask" BorderThickness="4,4,4,4" CornerRadius="5,5,5,5" BorderBrush="#FF803A3A">
+        <Border x:Name="borderMask" Style="{StaticResource EntityBorder}">
             <Grid x:Name="maskedGrid">
-                <Button x:Name="mainButton" Style="{StaticResource NormalButton}">
+                <Button x:Name="btnNew" Style="{StaticResource DisabledButton}" Click="btnNew_Click">
                 </Button>
+                <local:AspectRatioLayoutDecorator x:Name="iconAspectFitter">
+                    <Image x:Name="imgIcon" Stretch="Fill"/>
+                </local:AspectRatioLayoutDecorator>
             </Grid>
         </Border>
     </Grid>

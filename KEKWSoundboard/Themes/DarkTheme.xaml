@@ -13,7 +13,13 @@
     <SolidColorBrush x:Key="ImageToggleChecked" Color="#FF4A4A5A"/>
 
     <!--Text-->
-    <SolidColorBrush x:Key="NormalTextColour" Color="#FFE4E4E4"/>
+    <SolidColorBrush x:Key="NormalTextBrush" Color="#FFE4E4E4"/>
+    <Color x:Key="NormalTextColour">#FFE4E4E4</Color>
+
+    <!--TextBox-->
+    <SolidColorBrush x:Key="TextBoxNormalBackground" Color="#FF4F4F5F"/>
+    <SolidColorBrush x:Key="TextBoxCaret" Color="White"/>
+    <Color x:Key="TextBoxDisabledForeground">#FFC4C4D1</Color>
 
     <!--MenuItem-->
     <SolidColorBrush x:Key="MenuItemBorder" Color="#595959"/>
@@ -22,4 +28,16 @@
     <SolidColorBrush x:Key="CaptionHighlightBackground" Color="#FF40404C"/>
     <SolidColorBrush x:Key="CaptionNormalText" Color="#FFC1C1C1"/>
     <SolidColorBrush x:Key="CaptionHighlightText" Color="#FFE0E0E0"/>
+    
+    <!--Slider-->
+    <SolidColorBrush x:Key="SliderBehind" Color="#B66161"/>
+    <SolidColorBrush x:Key="SliderAhead" Color="#7A7A7A"/>
+    <SolidColorBrush x:Key="SliderHead" Color="#E1E1E1"/>
+
+    <!--Separator-->
+    <SolidColorBrush x:Key="Separator" Color="#E6E6E6"/>
+    
+    <!--Entity-->
+    <SolidColorBrush x:Key="EntityBorderBrush" Color="#FF803A3A"/>
+
 </ResourceDictionary>

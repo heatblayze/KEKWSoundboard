@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,9 +31,18 @@ namespace KEKWSoundboard.Database
             if (File.Exists(_dataPath))
             {
                 var rawData = File.ReadAllText(_dataPath);
-                _data = JsonConvert.DeserializeObject(rawData) as DatabaseModel;
+                try
+                {
+                    _data = JsonConvert.DeserializeObject<DatabaseModel>(rawData);
+                }
+                catch (Exception e)
+                {
+                    // TODO: prompt user there was an error
+                    Console.WriteLine(e);
+                }
             }
-            else
+
+            if (_data == null)
             {
                 _data = new DatabaseModel();
                 _data.Profiles.Add(new DatabaseProfile()
@@ -74,17 +84,18 @@ namespace KEKWSoundboard.Database
 
         #region Add Entity
 
-        public void AddFolder(DatabaseFolder folder)
+        public bool AddFolder(DatabaseFolder folder)
         {
             if (!TryAddEntity(folder))
-                return;
+                return false;
             SaveData();
+            return true;
         }
 
-        public void AddSound(DatabaseSound sound)
+        public bool AddSound(DatabaseSound sound)
         {
             if (!TryAddEntity(sound))
-                return;
+                return false;
 
             // Copy the sound to the entity directory
             var entityFolder = Path.Combine(_rootDirectory, sound.Id.ToString());
@@ -98,10 +109,13 @@ namespace KEKWSoundboard.Database
                 sound.SoundFile = updatedSoundPath;
             }
             SaveData();
+            return true;
         }
 
         bool TryAddEntity(DatabaseEntity entity)
         {
+            // Assign it a new ID
+            entity.Id = ++_data.LastId;
             if (entity.ParentId == null)
             {
                 // Add to root
@@ -134,10 +148,6 @@ namespace KEKWSoundboard.Database
                 // Image now points to copied file
                 entity.ImageFile = updatedImagePath;
             }
-
-            // Update the last id that was used
-            _data.LastId++;
-
             return true;
         }
 
@@ -145,18 +155,23 @@ namespace KEKWSoundboard.Database
 
         #region Update Entity
 
-        public void UpdateFolder(DatabaseFolder folder)
+        public bool UpdateFolder(DatabaseFolder folderEntity)
         {
+            var folder = folderEntity.Clone();
+
             if (!TryUpdateEntityInfo(folder))
-                return;
+                return false;
             UpdateEntityInDatabase(folder);
             SaveData();
+            return true;
         }
 
-        public void UpdateSound(DatabaseSound sound)
+        public bool UpdateSound(DatabaseSound soundEntity)
         {
+            var sound = soundEntity.Clone();
+
             if (!TryUpdateEntityInfo(sound))
-                return;
+                return false;
 
             var oldEntity = _data.Profiles[_profileIndex].Entities.First(x => x.Id == sound.Id);
             if (oldEntity.ImageFile != sound.ImageFile)
@@ -177,6 +192,7 @@ namespace KEKWSoundboard.Database
 
             UpdateEntityInDatabase(sound);
             SaveData();
+            return true;
         }
 
         bool TryUpdateEntityInfo(DatabaseEntity entity)
@@ -271,7 +287,7 @@ namespace KEKWSoundboard.Database
                 if (folder != null && folder is DatabaseFolder)
                     (folder as DatabaseFolder).ChildIds.Remove(entity.Id);
             }
-            
+
             SaveData();
         }
 

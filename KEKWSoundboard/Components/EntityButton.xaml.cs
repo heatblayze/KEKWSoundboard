@@ -1,4 +1,5 @@
 ﻿using KEKWSoundboard.Database;
+using KEKWSoundboard.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace KEKWSoundboard.Components
     public partial class EntityButton : UserControl
     {
         public DatabaseEntity Entity { get; private set; }
+        public int Position { get; set; }
 
         public EntityButton()
         {
@@ -33,35 +35,30 @@ namespace KEKWSoundboard.Components
             // TODO: check the type of entity and display appropriate content
             Entity = entity;
 
-            if (Entity == null)
+            if (Entity != null)
             {
-                mainButton.Style = (Style)Application.Current.Resources["DisabledButton"];
+                btnNew.Visibility = Visibility.Hidden;
+                btnNew.IsEnabled = false;
+
+                if (!string.IsNullOrEmpty(entity.ImageFile))
+                {
+                    var path = System.IO.Path.GetFullPath(entity.ImageFile);
+                    var image = new BitmapImage(new Uri(path));
+                    imgIcon.Source = image;
+
+                    iconAspectFitter.AspectRatio = image.Width / image.Height;
+                    iconAspectFitter.AspectRatioMode = AspectRatioMode.EnvelopeParent;
+                }
             }
         }
 
-        protected override void OnRender(DrawingContext drawingContext)
+        private void btnNew_Click(object sender, RoutedEventArgs e)
         {
-            //// Make a visual brush out of the masking control.
-            //VisualBrush brush = new VisualBrush(borderMask);
-            //// Set desired opacity.
-            //brush.Opacity = 1.0;
-            //// Get the offset between the two controls.
-            //Point offset = maskedGrid.TranslatePoint(new Point(0, 0), borderMask);
-            //// Determine the difference in scaling.
-            //Point scale = new Point(borderMask.ActualWidth / maskedGrid.ActualWidth,
-            //    borderMask.ActualHeight / maskedGrid.ActualHeight);
-            //TransformGroup group = new TransformGroup();
-            //// Set the scale of the mask.
-            //group.Children.Add(new ScaleTransform(scale.X, scale.Y, 0, 0));
-            //// Translate the mask so that it always stays in place.
-            //group.Children.Add(new TranslateTransform(-offset.X, -offset.Y));
-            //// Rotate it by the reverse of the control, to keep it oriented correctly.
-            //// (I am using a ScatterViewItem, which exposes an ActualOrientation property)
-            //group.Children.Add(new RotateTransform(0, 0, 0));
-            //brush.Transform = group;
-            //maskedGrid.OpacityMask = brush;
-
-            base.OnRender(drawingContext);
+            MainWindow.Instance.NavigateToPage(PageType.EditSound, new DatabaseSound
+            {
+                ParentId = MainPage.CurrentFolderId,
+                Position = Position
+            });
         }
     }
 }

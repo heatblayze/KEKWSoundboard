@@ -8,6 +8,12 @@ using System.Windows.Controls;
 
 namespace KEKWSoundboard.Components
 {
+    public enum AspectRatioMode
+    {
+        FitInParent,
+        EnvelopeParent
+    }
+
     public class AspectRatioLayoutDecorator : Decorator
     {
         public static readonly DependencyProperty AspectRatioProperty =
@@ -21,6 +27,17 @@ namespace KEKWSoundboard.Components
                     FrameworkPropertyMetadataOptions.AffectsMeasure
                  ),
               ValidateAspectRatio);
+
+        public static readonly DependencyProperty AspectRatioModeProperty =
+           DependencyProperty.Register(
+              "AspectRatioMode",
+              typeof(AspectRatioMode),
+              typeof(AspectRatioLayoutDecorator),
+              new FrameworkPropertyMetadata
+                 (
+                    AspectRatioMode.FitInParent,
+                    FrameworkPropertyMetadataOptions.AffectsMeasure
+                 ));
 
         private static bool ValidateAspectRatio(object value)
         {
@@ -41,10 +58,19 @@ namespace KEKWSoundboard.Components
             set { SetValue(AspectRatioProperty, value); }
         }
 
+        public AspectRatioMode AspectRatioMode
+        {
+            get { return (AspectRatioMode)GetValue(AspectRatioModeProperty); }
+            set { SetValue(AspectRatioModeProperty, value); }
+        }
+
+        Size _constraint;
+
         protected override Size MeasureOverride(Size constraint)
         {
             if (Child != null)
             {
+                _constraint = constraint;
                 constraint = SizeToRatio(constraint, false);
                 Child.Measure(constraint);
 
@@ -68,6 +94,21 @@ namespace KEKWSoundboard.Components
             double height = size.Width / ratio;
             double width = size.Height * ratio;
 
+            if (AspectRatioMode == AspectRatioMode.EnvelopeParent)
+            {
+                expand = true;
+                if(height < width)
+                {
+                    height = size.Height;
+                    width = height * ratio;
+                }
+                else
+                {
+                    width = size.Width;
+                    height = width / ratio;
+                }                
+            }
+
             if (expand)
             {
                 width = Math.Max(width, size.Width);
@@ -88,8 +129,8 @@ namespace KEKWSoundboard.Components
             {
                 var newSize = SizeToRatio(arrangeSize, false);
 
-                double widthDelta = arrangeSize.Width - newSize.Width;
-                double heightDelta = arrangeSize.Height - newSize.Height;
+                double widthDelta = _constraint.Width - newSize.Width;
+                double heightDelta = _constraint.Height - newSize.Height;
 
                 double top = 0;
                 double left = 0;
@@ -105,6 +146,15 @@ namespace KEKWSoundboard.Components
                 {
                     top = heightDelta / 2;
                 }
+
+                //if (AspectRatioMode == AspectRatioMode.EnvelopeParent)
+                //{
+                //    widthDelta = newSize.Width - arrangeSize.Width;
+                //    heightDelta = newSize.Height - arrangeSize.Height;
+
+                //    left = widthDelta / 2;
+                //    top = heightDelta / 2;
+                //}
 
                 var finalRect = new Rect(new Point(left, top), newSize);
                 Child.Arrange(finalRect);

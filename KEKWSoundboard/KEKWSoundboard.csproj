@@ -9,17 +9,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Fonts\Cabin-Bold.ttf" />
+    <None Remove="Resources\Fonts\Cabin-BoldItalic.ttf" />
+    <None Remove="Resources\Fonts\Cabin-Italic.ttf" />
+    <None Remove="Resources\Fonts\Cabin-Medium.ttf" />
+    <None Remove="Resources\Fonts\Cabin-MediumItalic.ttf" />
+    <None Remove="Resources\Fonts\Cabin-Regular.ttf" />
+    <None Remove="Resources\Fonts\Cabin-SemiBold.ttf" />
+    <None Remove="Resources\Fonts\Cabin-SemiBoldItalic.ttf" />
+    <None Remove="Resources\Icons\BackIcon.png" />
+    <None Remove="Resources\Icons\blankImage.png" />
     <None Remove="Resources\Icons\icons8-pin-50.png" />
     <None Remove="Windows\kekw-emote-twitch.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\Icons\icons8-pin-50.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Icons\kekw-emote-twitch.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Resources\Icons\blankImage.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\icons8-pin-50.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\kekw-emote-twitch.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +44,31 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Fonts\Cabin-Bold.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Cabin-BoldItalic.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Cabin-Italic.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Cabin-Medium.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Cabin-MediumItalic.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Cabin-Regular.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Cabin-SemiBold.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Cabin-SemiBoldItalic.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\BackIcon.png" />
     <Resource Include="Windows\kekw-emote-twitch.ico" />
   </ItemGroup>
 

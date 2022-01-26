@@ -37,7 +37,7 @@ namespace KEKWSoundboard.Netcode
             var client = _server.EndAcceptTcpClient(result);            
 
             byte[] bytes = new byte[512];
-            string data = null;
+            string data;
 
             // Get a stream object for reading and writing
             NetworkStream stream = client.GetStream();

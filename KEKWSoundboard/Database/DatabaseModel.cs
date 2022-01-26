@@ -18,13 +18,13 @@ namespace KEKWSoundboard.Database
 
     public class DatabaseEntity
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = -1;
         public int? ParentId { get; set; }
         public int Position { get; set; }
         public string Name { get; set; }
         public string ImageFile { get; set; }
 
-        public DatabaseEntity Clone()
+        public virtual DatabaseEntity Clone()
         {
             return (DatabaseEntity)this.MemberwiseClone();
         }
@@ -34,7 +34,7 @@ namespace KEKWSoundboard.Database
     {
         public List<int> ChildIds { get; set; } = new List<int>();
 
-        new public DatabaseFolder Clone()
+        public override DatabaseFolder Clone()
         {
             return (DatabaseFolder)this.MemberwiseClone();
         }
@@ -45,7 +45,7 @@ namespace KEKWSoundboard.Database
         public string SoundFile { get; set; }
         public float Volume { get; set; }
 
-        new public DatabaseSound Clone()
+        public override DatabaseSound Clone()
         {
             return (DatabaseSound)this.MemberwiseClone();
         }

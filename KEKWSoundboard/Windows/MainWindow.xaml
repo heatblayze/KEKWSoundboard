@@ -7,7 +7,7 @@
         xmlns:components="clr-namespace:KEKWSoundboard.Components"
         xmlns:database="clr-namespace:KEKWSoundboard.Database"
         mc:Ignorable="d"
-        Title="Soundboard" Height="450" Width="800" WindowStyle="SingleBorderWindow" Background="Black" WindowStartupLocation="CenterScreen" Deactivated="Window_Deactivated">
+        Title="Soundboard" Height="450" Width="800" WindowStyle="SingleBorderWindow" Background="Black" WindowStartupLocation="CenterScreen" Deactivated="Window_Deactivated" Activated="Window_Activated">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="34" />
     </WindowChrome.WindowChrome>
@@ -20,7 +20,7 @@
         <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Restore" />
     </Window.CommandBindings>
 
-    <Border x:Name="MainWindowBorder" BorderBrush="LightCoral" BorderThickness="0" >
+    <Border x:Name="MainWindowBorder" BorderBrush="{x:Null}" BorderThickness="0" >
         <Grid x:Name="parentContainer">
 
             <Grid.RowDefinitions>
@@ -32,13 +32,13 @@
             <Grid Grid.Row="0" Height="30" Style="{StaticResource NormalGrid}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0">
                     <Image Source="/Resources/Icons/kekw-emote-twitch.ico" Width="18" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                    <TextBlock Style="{StaticResource NormalTextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="3,0,0,0">Soundboard</TextBlock>
+                    <TextBlock Style="{StaticResource NormalTextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="3,0,0,0" FontStyle="Normal">Soundboard</TextBlock>
                     <Menu Style="{StaticResource NormalMenu}" WindowChrome.IsHitTestVisibleInChrome="True">
                         <MenuItem Header="Edit" Template="{StaticResource NormalMenuItem}">
-                            <MenuItem Header="Preferences"/>
+                            <MenuItem Header="Preferences" FontFamily="Cabin"/>
                         </MenuItem>
                         <MenuItem Header="Help" Template="{StaticResource NormalMenuItem}">
-                            <MenuItem Header="About"/>
+                            <MenuItem Header="About" FontFamily="Cabin"/>
                         </MenuItem>
                     </Menu>
                 </StackPanel>
@@ -63,28 +63,21 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button x:Name="btnBack" Style="{StaticResource NormalButton}" FontSize="24" Click="btnBack_Click">
+                        <Image Source="/Resources/Icons/BackIcon.png" Opacity="0.4" Margin="2,0,2,0"/>
+                    </Button>
+                    <Label Grid.Column="0" x:Name="pageTitle" Style="{StaticResource NormalLabel}" Content="" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="20" FontWeight="Bold" Padding="0,2,2,2"/>
+                </StackPanel>
+                
+
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
                     <components:ImageToggle Style="{StaticResource SeamlessImageToggle}" Source="/Resources/Icons/icons8-pin-50.png" CheckedBrush="#FF775555" Checked="ImageToggle_Checked" Unchecked="ImageToggle_Unchecked" />
                 </StackPanel>
 
                 <!--Main button grid-->
                 <Grid Grid.Row="1">
-                    <components:AspectRatioLayoutDecorator AspectRatio="1.668">
-                        <Grid x:Name="mainGrid" Style="{StaticResource NormalGrid}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                        </Grid>
-                    </components:AspectRatioLayoutDecorator>
+                    <Frame x:Name="contentFrame" NavigationUIVisibility="Hidden"/>
                 </Grid>
             </Grid>
         </Grid>

@@ -8,25 +8,47 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Themes/DarkTheme.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Slider.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/TextBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <FontFamily x:Key="Cabin">pack://application:,,,/Resources/Fonts/#Cabin</FontFamily>
 
             <!--Grid-->
             <Style TargetType="Grid" x:Key="NormalGrid">
                 <Setter Property="Background" Value="{StaticResource NormalBackground}"/>
             </Style>
-            
+
+            <!--Border-->
+            <Style TargetType="Border" x:Key="NormalSeparator">
+                <Setter Property="BorderBrush" Value="{StaticResource Separator}"/>
+                <Setter Property="Background" Value="{StaticResource Separator}"/>
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="20" />
+            </Style>
+
+            <Style TargetType="Border" x:Key="EntityBorder">
+                <Setter Property="BorderBrush" Value="{StaticResource EntityBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="6" />
+                <Setter Property="CornerRadius" Value="5" />
+            </Style>
+
             <!--Buttons-->
             <Style TargetType="Button" x:Key="NormalButton">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
                 <Setter Property="SnapsToDevicePixels" Value="True"/>
                 <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
-                <Setter Property="Foreground" Value="{StaticResource NormalTextColour}"/>
+                <Setter Property="Foreground" Value="{StaticResource NormalTextBrush}"/>
+                <Setter Property="FontFamily" Value="{StaticResource Cabin}"/>
+                <Setter Property="FontSize" Value="15"/>
 
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Grid x:Name="primaryGrid" Background="{TemplateBinding Background}" OpacityMask="{TemplateBinding OpacityMask}">
-                                <Label Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Grid x:Name="primaryGrid">
+                                <Border BorderBrush="{x:Null}" BorderThickness="1" CornerRadius="3" Background="{TemplateBinding Background}" OpacityMask="{TemplateBinding OpacityMask}">
+                                    <Label Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
@@ -54,7 +76,7 @@
             <Style TargetType="components:ImageToggle" x:Key="ImageToggle">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
                 <Setter Property="SnapsToDevicePixels" Value="True"/>
-                <Setter Property="Foreground" Value="{StaticResource NormalTextColour}"/>
+                <Setter Property="Foreground" Value="{StaticResource NormalTextBrush}"/>
                 
                 <Setter Property="NormalBrush" Value="{StaticResource ButtonBackground}"/>
                 <Setter Property="CheckedBrush" Value="{StaticResource ImageToggleChecked}"/>
@@ -78,7 +100,18 @@
 
             <!--TextBlock-->
             <Style TargetType="TextBlock" x:Key="NormalTextBlock">
-                <Setter Property="Foreground" Value="{StaticResource NormalTextColour}"/>
+                <Setter Property="Foreground" Value="{StaticResource NormalTextBrush}"/>
+                <Setter Property="FontFamily" Value="{StaticResource Cabin}"/>
+                <Setter Property="FontWeight" Value="Regular"/>
+            </Style>
+
+            <!--Label-->
+            <Style TargetType="Label" x:Key="NormalLabel">
+                <Setter Property="Foreground" Value="{StaticResource NormalTextBrush}"/>
+                <Setter Property="FontFamily" Value="{StaticResource Cabin}"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Padding" Value="2,2,2,2" />
+                <Setter Property="FontSize" Value="15"/>
             </Style>
 
             <!--Base style for title bar buttons-->
@@ -142,8 +175,9 @@
 
             <!--MenuItem Style-->
             <Style TargetType="Menu" x:Key="NormalMenu">
-                <Setter Property="Foreground" Value="{StaticResource NormalTextColour}"/>
+                <Setter Property="Foreground" Value="{StaticResource NormalTextBrush}"/>
                 <Setter Property="Background" Value="{x:Null}"/>
+                <Setter Property="FontFamily" Value="{StaticResource Cabin}"/>
 
                 <Setter Property="Template">
                     <Setter.Value>
@@ -172,7 +206,7 @@
                         <ContentPresenter ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Grid.Column="1" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         <Popup x:Name="PART_Popup" AllowsTransparency="True" Focusable="False" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" Placement="Bottom">
                             <Border x:Name="SubMenuBorder" BorderBrush="{StaticResource MenuItemBorder}" BorderThickness="1" Background="{StaticResource NormalBackground}" Padding="2">
-                                <ScrollViewer x:Name="SubMenuScrollViewer" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+                                <ScrollViewer x:Name="SubMenuScrollViewer" FontFamily="{StaticResource Cabin}" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
                                     <Grid RenderOptions.ClearTypeHint="Enabled">
                                         <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
                                             <Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=SubMenuBorder}" Height="{Binding ActualHeight, ElementName=SubMenuBorder}" Width="{Binding ActualWidth, ElementName=SubMenuBorder}"/>

@@ -1,73 +1,65 @@
-﻿using KEKWSoundboard.Components;
-using KEKWSoundboard.Database;
+﻿using KEKWSoundboard.Database;
+using KEKWSoundboard.Pages;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace KEKWSoundboard
 {
+    public enum PageType
+    {
+        Main,
+        EditSound,
+        Preferences
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        int? _currentFolderId;
+        public static MainWindow Instance { get; private set; }
 
-        int _initialRow = 0;
-        int _initialColumn = 0;
-        int _columnLimit = 4;
-        int _maxItems = 15;
         bool _keepOnTop;
-
-        List<EntityButton> _currentButtons = new List<EntityButton>();
+        MainPage _mainPage;
 
         public MainWindow()
         {
+            Instance = this;
+
             InitializeComponent();
             StateChanged += MainWindowStateChangeRaised;
 
-            FillDisplay();
+            _mainPage = new MainPage();
+            NavigateToPage(PageType.Main);
         }
 
-        void FillDisplay()
+        public void NavigateToPage(PageType pageType, DatabaseEntity entity = null)
         {
-            foreach (var item in _currentButtons)
+            btnBack.Visibility = Visibility.Visible;
+            switch (pageType)
             {
-                mainGrid.Children.Remove(item);
-            }
-            _currentButtons.Clear();
-
-            var entities = DatabaseManager.Instance.GetEntitiesInFolder(_currentFolderId);
-            int row = _initialRow;
-            int column = _initialColumn;
-            for (int i = 0; i < _maxItems; i++)
-            {
-                var entity = entities.FirstOrDefault(x => x.Position == i);
-                var button = new EntityButton
-                {
-                    Padding = new Thickness(10)
-                };
-                button.SetEntity(entity);
-
-                _currentButtons.Add(button);
-                mainGrid.Children.Add(button);
-
-                Grid.SetRow(button, row);
-                Grid.SetColumn(button, column);
-
-                ++column;
-                if (column > _columnLimit)
-                {
-                    ++row;
-                    column = 0;
-                }
+                case PageType.Main:
+                    contentFrame.Navigate(_mainPage);
+                    btnBack.Visibility = Visibility.Hidden;
+                    break;
+                case PageType.EditSound:
+                    if (entity is DatabaseSound)
+                    {
+                        var editSoundPage = new EditSoundPage();
+                        editSoundPage.SetSound((DatabaseSound)entity);
+                        contentFrame.Navigate(editSoundPage);
+                    }
+                    break;
             }
         }
 
-        #region Window Functionality
+        public void SetPageTitle(string title)
+        {
+            pageTitle.Content = title;
+        }
+
+        #region Chrome Window Functionality
         // Can execute
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -90,6 +82,7 @@ namespace KEKWSoundboard
         private void CommandBinding_Executed_Restore(object sender, ExecutedRoutedEventArgs e)
         {
             SystemCommands.RestoreWindow(this);
+            KeepOnTop();
         }
 
         // Close
@@ -99,7 +92,7 @@ namespace KEKWSoundboard
         }
 
         // State change
-        private void MainWindowStateChangeRaised(object sender, EventArgs e)
+        private void MainWindowStateChangeRaised(object? sender, EventArgs e)
         {
             if (WindowState == WindowState.Maximized)
             {
@@ -116,6 +109,33 @@ namespace KEKWSoundboard
         }
         #endregion
 
+        #region Window Functionality
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            KeepOnTop();
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            KeepOnTop();
+        }
+
+        void KeepOnTop()
+        {
+            if (_keepOnTop)
+            {
+                Topmost = false;
+                Topmost = true;
+            }
+            else
+            {
+                Topmost = false;
+            }
+        }
+
+        #endregion
+
         private void ImageToggle_Checked(object sender, RoutedEventArgs e)
         {
             _keepOnTop = true;
@@ -124,15 +144,11 @@ namespace KEKWSoundboard
         private void ImageToggle_Unchecked(object sender, RoutedEventArgs e)
         {
             _keepOnTop = false;
-        }
+        }        
 
-        private void Window_Deactivated(object sender, EventArgs e)
+        private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            if (_keepOnTop)
-            {
-                Window window = (Window)sender;
-                window.Topmost = true;
-            }
+            NavigateToPage(PageType.Main);
         }
     }
 }
