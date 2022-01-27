@@ -9,11 +9,21 @@
     <Grid>
         <Border x:Name="borderMask" Style="{StaticResource EntityBorder}">
             <Grid x:Name="maskedGrid">
-                <Button x:Name="btnNew" Style="{StaticResource DisabledButton}" Click="btnNew_Click">
-                </Button>
-                <local:AspectRatioLayoutDecorator x:Name="iconAspectFitter">
+                <Button x:Name="btnNew" Style="{StaticResource DisabledButton}" Click="btnNew_Click" BorderThickness="0"/>
+                <local:AspectRatioLayoutDecorator x:Name="iconAspectFitter" AspectRatioMode="EnvelopeParent">
                     <Image x:Name="imgIcon" Stretch="Fill"/>
                 </local:AspectRatioLayoutDecorator>
+                <Grid x:Name="folderGrid" Margin="4,4,4,4">
+                    <Image Source="/Resources/Icons/icons8-folder-500.png" />
+                    <local:AspectRatioLayoutDecorator x:Name="folderIconAspectFitter" AspectRatioMode="EnvelopeParent">
+                        <Image x:Name="folderIcon" Stretch="Fill">
+                            <Image.OpacityMask>
+                                <ImageBrush Stretch="Uniform" ImageSource="/Resources/Icons/icons8-folder-500-Inside.png"/>
+                            </Image.OpacityMask>
+                        </Image>
+                    </local:AspectRatioLayoutDecorator>
+                </Grid>
+                <Button x:Name="btnPlay" Style="{StaticResource OverlayButton}" Click="btnPlay_Click" BorderThickness="0" MouseRightButtonUp="btnPlay_MouseRightButtonUp"/>
             </Grid>
         </Border>
     </Grid>

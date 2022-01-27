@@ -1,0 +1,65 @@
+﻿<Window x:Class="KEKWSoundboard.Windows.PopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KEKWSoundboard.Windows"
+        xmlns:components="clr-namespace:KEKWSoundboard.Components"
+        mc:Ignorable="d"
+        Name="WindowElement"
+        Title="Popup Window" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="34" />
+    </WindowChrome.WindowChrome>
+
+    <!--Title bar button commands-->
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Close" />
+    </Window.CommandBindings>
+
+    <Border x:Name="MainWindowBorder" BorderBrush="{x:Null}" BorderThickness="0" >
+        <Grid x:Name="parentContainer">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height ="Auto"/>
+                <RowDefinition Height ="*"/>
+            </Grid.RowDefinitions>
+
+            <!--Window chrome-->
+            <Grid Grid.Row="0" Height="30" Style="{StaticResource NormalGrid}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0">
+                    <Image Source="/Resources/Icons/kekw-emote-twitch.ico" Width="18" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <TextBlock Style="{StaticResource NormalTextBlock}" VerticalAlignment="Center"
+                               FontWeight="Bold" Margin="3,0,0,0" FontStyle="Normal" FontSize="14"
+                               Text="Soundboard"/>
+                </StackPanel>
+
+                <!--Caption buttons-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                    <Button Style="{StaticResource CloseButtonStyle}" WindowChrome.IsHitTestVisibleInChrome="True"
+                            Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                </StackPanel>
+            </Grid>
+
+            <!--App content-->
+            <Grid Grid.Row="1" Style="{StaticResource NormalGrid}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Grid.Column="0" x:Name="pageTitle" Style="{StaticResource NormalLabel}"
+                           Content="{Binding ElementName=WindowElement, Path=Title}"
+                           HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Padding="0,2,2,2"
+                           FontSize="20" FontWeight="Bold"/>
+                </StackPanel>
+
+                <!--Main content-->
+                <Grid Grid.Row="1">
+                    <Frame x:Name="contentFrame" NavigationUIVisibility="Hidden"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -49,13 +50,13 @@ namespace KEKWSoundboard.Netcode
             {
                 // Translate data bytes to a ASCII string.
                 data = Encoding.UTF8.GetString(bytes, 0, i);
-                Console.WriteLine("Received: {0}", data);
+                Debug.WriteLine("Received: {0}", data);
 
                 byte[] msg = Encoding.UTF8.GetBytes(data);
 
                 // Send back a response.
                 stream.Write(msg, 0, msg.Length);
-                Console.WriteLine("Sent: {0}", data);
+                Debug.WriteLine("Sent: {0}", data);
             }
 
             client.Close();

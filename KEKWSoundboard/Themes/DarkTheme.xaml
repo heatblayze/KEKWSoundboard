@@ -14,12 +14,13 @@
 
     <!--Text-->
     <SolidColorBrush x:Key="NormalTextBrush" Color="#FFE4E4E4"/>
+    <SolidColorBrush x:Key="DisabledTextBrush" Color="#FFB3B3B3"/>
     <Color x:Key="NormalTextColour">#FFE4E4E4</Color>
 
     <!--TextBox-->
     <SolidColorBrush x:Key="TextBoxNormalBackground" Color="#FF4F4F5F"/>
     <SolidColorBrush x:Key="TextBoxCaret" Color="White"/>
-    <Color x:Key="TextBoxDisabledForeground">#FFC4C4D1</Color>
+    <Color x:Key="TextBoxDisabledForeground">#FFB3B3B3</Color>
 
     <!--MenuItem-->
     <SolidColorBrush x:Key="MenuItemBorder" Color="#595959"/>
@@ -39,5 +40,11 @@
     
     <!--Entity-->
     <SolidColorBrush x:Key="EntityBorderBrush" Color="#FF803A3A"/>
+
+    <!--ComboBox-->
+    <SolidColorBrush x:Key="ComboBoxNormalBackground" Color="#FF40404E"/>
+    <SolidColorBrush x:Key="ComboBoxDisabledForeground" Color="#FFE4E4E4"/>
+    <!--<SolidColorBrush x:Key="ButtonHighlightBackground" Color="#FF5F5F73"/>
+    <SolidColorBrush x:Key="ButtonPressBackground" Color="#FF4E4E5D"/>-->
 
 </ResourceDictionary>

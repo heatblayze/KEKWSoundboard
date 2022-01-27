@@ -1,15 +1,16 @@
-﻿using KEKWSoundboard.Database;
+﻿using KEKWSoundboard.Audio;
+using KEKWSoundboard.Database;
 using KEKWSoundboard.Pages;
 using System;
 using System.Windows;
 using System.Windows.Input;
 
-namespace KEKWSoundboard
+namespace KEKWSoundboard.Windows
 {
     public enum PageType
     {
         Main,
-        EditSound,
+        EditEntity,
         Preferences
     }
 
@@ -22,6 +23,7 @@ namespace KEKWSoundboard
 
         bool _keepOnTop;
         MainPage _mainPage;
+        AudioCaptureManager _audioCaptureManager;
 
         public MainWindow()
         {
@@ -31,32 +33,31 @@ namespace KEKWSoundboard
             StateChanged += MainWindowStateChangeRaised;
 
             _mainPage = new MainPage();
-            NavigateToPage(PageType.Main);
+            contentFrame.Navigate(_mainPage);
+            ReloadCaptureDevice();
+
+            btnBack.Visibility = Visibility.Hidden;
         }
 
-        public void NavigateToPage(PageType pageType, DatabaseEntity entity = null)
+        public void SetBackButtonVisible(bool visible)
         {
-            btnBack.Visibility = Visibility.Visible;
-            switch (pageType)
+            btnBack.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public void RefreshContent()
+        {
+            contentFrame.Refresh();
+        }
+
+        public void ReloadCaptureDevice()
+        {
+            if (_audioCaptureManager != null)
             {
-                case PageType.Main:
-                    contentFrame.Navigate(_mainPage);
-                    btnBack.Visibility = Visibility.Hidden;
-                    break;
-                case PageType.EditSound:
-                    if (entity is DatabaseSound)
-                    {
-                        var editSoundPage = new EditSoundPage();
-                        editSoundPage.SetSound((DatabaseSound)entity);
-                        contentFrame.Navigate(editSoundPage);
-                    }
-                    break;
+                _audioCaptureManager.Dispose();
             }
-        }
 
-        public void SetPageTitle(string title)
-        {
-            pageTitle.Content = title;
+            if (DatabaseManager.CaptureDevice != null && DatabaseManager.PrimaryRenderDevice != null)
+                _audioCaptureManager = new AudioCaptureManager(DatabaseManager.CaptureDevice, DatabaseManager.PrimaryRenderDevice, null, DatabaseManager.CaptureDeviceVolume);
         }
 
         #region Chrome Window Functionality
@@ -144,11 +145,31 @@ namespace KEKWSoundboard
         private void ImageToggle_Unchecked(object sender, RoutedEventArgs e)
         {
             _keepOnTop = false;
-        }        
+        }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(PageType.Main);
+            _mainPage.Back();
+        }
+
+        private void Preferences_Click(object sender, RoutedEventArgs e)
+        {
+            var preferencesPage = new PreferencesPage();
+            var popup = new PopupWindow();
+            popup.Owner = this;
+            popup.Title = "Preferences";
+            popup.SetPage(preferencesPage);
+
+            var result = popup.ShowDialog();
+            if (result == true)
+            {
+                ReloadCaptureDevice();
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _audioCaptureManager?.Dispose();
         }
     }
 }

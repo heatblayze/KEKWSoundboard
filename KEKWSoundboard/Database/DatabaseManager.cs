@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using NAudio.CoreAudioApi;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -9,6 +11,16 @@ namespace KEKWSoundboard.Database
     internal class DatabaseManager
     {
         public static DatabaseManager Instance { get; private set; }
+
+        public static MMDevice PrimaryRenderDevice { get; private set; }
+        public static float PrimaryRenderDeviceVolume { get; private set; }
+
+        public static MMDevice SecondaryRenderDevice { get; private set; }
+        public static float SecondaryRenderDeviceVolume { get; private set; }
+
+        public static MMDevice CaptureDevice { get; private set; }
+        public static float CaptureDeviceVolume { get; private set; }
+        public static CaptureMixMode CaptureMixMode { get; private set; }
 
         string _rootDirectory;
         DatabaseModel _data;
@@ -33,12 +45,18 @@ namespace KEKWSoundboard.Database
                 var rawData = File.ReadAllText(_dataPath);
                 try
                 {
-                    _data = JsonConvert.DeserializeObject<DatabaseModel>(rawData);
+                    _data = JsonConvert.DeserializeObject<DatabaseModel>(rawData, new JsonSerializerSettings
+                    {
+                        TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                        TypeNameHandling = TypeNameHandling.All
+                    });
+
+                    ReloadPreferences();
                 }
                 catch (Exception e)
                 {
                     // TODO: prompt user there was an error
-                    Console.WriteLine(e);
+                    Debug.WriteLine(e);
                 }
             }
 
@@ -80,6 +98,11 @@ namespace KEKWSoundboard.Database
             }
 
             return entities;
+        }
+
+        public DatabaseEntity GetEntity(int id)
+        {
+            return _data.Profiles[_profileIndex].Entities.First(x => x.Id == id);
         }
 
         #region Add Entity
@@ -173,8 +196,8 @@ namespace KEKWSoundboard.Database
             if (!TryUpdateEntityInfo(sound))
                 return false;
 
-            var oldEntity = _data.Profiles[_profileIndex].Entities.First(x => x.Id == sound.Id);
-            if (oldEntity.ImageFile != sound.ImageFile)
+            var oldEntity = (DatabaseSound)GetEntity(sound.Id);
+            if (oldEntity.SoundFile != sound.SoundFile)
             {
                 // Copy the image to the folder
                 if (!string.IsNullOrEmpty(sound.SoundFile))
@@ -197,7 +220,7 @@ namespace KEKWSoundboard.Database
 
         bool TryUpdateEntityInfo(DatabaseEntity entity)
         {
-            var oldEntity = _data.Profiles[_profileIndex].Entities.First(x => x.Id == entity.Id);
+            var oldEntity = GetEntity(entity.Id);
 
             if (oldEntity.ParentId != entity.ParentId)
             {
@@ -261,7 +284,7 @@ namespace KEKWSoundboard.Database
         void UpdateEntityInDatabase(DatabaseEntity entity)
         {
             // Find the index of the matching entity ID and update it with the new one
-            var entityIndex = _data.Profiles[_profileIndex].Entities.IndexOf(_data.Profiles[_profileIndex].Entities.First(x => x.Id == entity.Id));
+            var entityIndex = _data.Profiles[_profileIndex].Entities.IndexOf(GetEntity(entity.Id));
             _data.Profiles[_profileIndex].Entities[entityIndex] = entity;
         }
 
@@ -272,7 +295,7 @@ namespace KEKWSoundboard.Database
         public void DeleteEntity(DatabaseEntity entity)
         {
             // Remove from main list of entities
-            var entityIndex = _data.Profiles[_profileIndex].Entities.IndexOf(_data.Profiles[_profileIndex].Entities.First(x => x.Id == entity.Id));
+            var entityIndex = _data.Profiles[_profileIndex].Entities.IndexOf(GetEntity(entity.Id));
             _data.Profiles[_profileIndex].Entities.RemoveAt(entityIndex);
 
             if (entity.ParentId == null)
@@ -293,6 +316,55 @@ namespace KEKWSoundboard.Database
 
         #endregion
 
+        #region Preferences
+
+        public DatabasePreferences GetPreferences()
+        {
+            return _data.Preferences.Clone();
+        }
+
+        public void UpdatePreferences(DatabasePreferences preferences)
+        {
+            _data.Preferences = preferences.Clone();
+            SaveData();
+
+            ReloadPreferences();
+        }
+
+        #endregion
+
+        void ReloadPreferences()
+        {
+            var enumerator = new MMDeviceEnumerator();
+            // Reload the rendering devices
+            foreach (var wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.All))
+            {
+                if (wasapi.ID == _data.Preferences.PrimaryRenderDevice)
+                {
+                    PrimaryRenderDevice = wasapi;
+                }
+                if (wasapi.ID == _data.Preferences.SecondaryRenderDevice)
+                {
+                    SecondaryRenderDevice = wasapi;
+                }
+            }
+
+            // Reload the capturing device
+            foreach (var wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.All))
+            {
+                if (wasapi.ID == _data.Preferences.CaptureDevice)
+                {
+                    CaptureDevice = wasapi;
+                }
+            }
+
+            PrimaryRenderDeviceVolume = _data.Preferences.PrimaryRenderDeviceVolume;
+            SecondaryRenderDeviceVolume = _data.Preferences.SecondaryRenderDeviceVolume;
+            CaptureDeviceVolume = _data.Preferences.CaptureDeviceVolume;
+
+            CaptureMixMode = _data.Preferences.CaptureMixMode;
+        }
+
         public List<string> GetProfiles()
         {
             return _data.Profiles.Select(x => x.Name).ToList();
@@ -307,7 +379,11 @@ namespace KEKWSoundboard.Database
 
         void SaveData()
         {
-            var rawData = JsonConvert.SerializeObject(_data);
+            var rawData = JsonConvert.SerializeObject(_data, new JsonSerializerSettings
+            {
+                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                TypeNameHandling = TypeNameHandling.All
+            });
             File.WriteAllText(_dataPath, rawData);
         }
     }

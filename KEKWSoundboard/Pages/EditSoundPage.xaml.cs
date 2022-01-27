@@ -1,8 +1,10 @@
 ﻿using KEKWSoundboard.Database;
+using KEKWSoundboard.Windows;
 using Microsoft.Win32;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace KEKWSoundboard.Pages
@@ -10,7 +12,7 @@ namespace KEKWSoundboard.Pages
     /// <summary>
     /// Interaction logic for EditSoundPage.xaml
     /// </summary>
-    public partial class EditSoundPage : Page
+    public partial class EditSoundPage : PopupPage
     {
         public DatabaseSound Sound { get; private set; }
 
@@ -26,7 +28,7 @@ namespace KEKWSoundboard.Pages
             if (Sound.Id >= 0)
             {
                 // Editing sound
-                MainWindow.Instance.SetPageTitle("Edit Sound");
+                PopupWindow.Title = "Edit Sound";
 
                 txtIcon.Text = sound.ImageFile;
                 txtSound.Text = sound.SoundFile;
@@ -36,13 +38,15 @@ namespace KEKWSoundboard.Pages
             else
             {
                 // New sound
-                MainWindow.Instance.SetPageTitle("New Sound");
+                PopupWindow.Title = "New Sound";
             }
         }
 
         private void txtIcon_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var image = new BitmapImage(new Uri(txtIcon.Text));
+            var path = System.IO.Path.GetFullPath(txtIcon.Text);
+            var rawData = System.IO.File.ReadAllBytes(path);
+            var image = (BitmapSource)new ImageSourceConverter().ConvertFrom(rawData);
             imgIcon.Source = image;
 
             iconAspectFitter.AspectRatio = image.Width / image.Height;
@@ -96,7 +100,7 @@ namespace KEKWSoundboard.Pages
 
             if (success)
             {
-                MainWindow.Instance.NavigateToPage(PageType.Main);
+                PopupWindow.SetResult(true);
             }
         }
     }

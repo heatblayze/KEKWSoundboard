@@ -1,13 +1,13 @@
-﻿<Window x:Class="KEKWSoundboard.MainWindow"
+﻿<Window x:Class="KEKWSoundboard.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:KEKWSoundboard"
+        xmlns:local="clr-namespace:KEKWSoundboard.Windows"
         xmlns:components="clr-namespace:KEKWSoundboard.Components"
         xmlns:database="clr-namespace:KEKWSoundboard.Database"
         mc:Ignorable="d"
-        Title="Soundboard" Height="450" Width="800" WindowStyle="SingleBorderWindow" Background="Black" WindowStartupLocation="CenterScreen" Deactivated="Window_Deactivated" Activated="Window_Activated">
+        Title="Soundboard" Height="500" Width="750" WindowStyle="SingleBorderWindow" Background="Black" WindowStartupLocation="CenterScreen" Deactivated="Window_Deactivated" Activated="Window_Activated" Closing="Window_Closing">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="34" />
     </WindowChrome.WindowChrome>
@@ -32,10 +32,10 @@
             <Grid Grid.Row="0" Height="30" Style="{StaticResource NormalGrid}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0">
                     <Image Source="/Resources/Icons/kekw-emote-twitch.ico" Width="18" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                    <TextBlock Style="{StaticResource NormalTextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="3,0,0,0" FontStyle="Normal">Soundboard</TextBlock>
+                    <TextBlock Style="{StaticResource NormalTextBlock}" VerticalAlignment="Center" FontWeight="Bold" Margin="3,0,0,0" FontStyle="Normal" FontSize="14">Soundboard</TextBlock>
                     <Menu Style="{StaticResource NormalMenu}" WindowChrome.IsHitTestVisibleInChrome="True">
                         <MenuItem Header="Edit" Template="{StaticResource NormalMenuItem}">
-                            <MenuItem Header="Preferences" FontFamily="Cabin"/>
+                            <MenuItem Header="Preferences" FontFamily="Cabin" Click="Preferences_Click"/>
                         </MenuItem>
                         <MenuItem Header="Help" Template="{StaticResource NormalMenuItem}">
                             <MenuItem Header="About" FontFamily="Cabin"/>

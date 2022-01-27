@@ -1,5 +1,6 @@
 ﻿using KEKWSoundboard.Components;
 using KEKWSoundboard.Database;
+using KEKWSoundboard.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,25 @@ namespace KEKWSoundboard.Pages
     /// </summary>
     public partial class MainPage : Page
     {
-        public static int? CurrentFolderId { get; set; }
+        public static int? CurrentFolderId
+        {
+            get
+            {
+                return _folderId;
+            }
+            set
+            {
+                var oldVal = _folderId;
+                _folderId = value;
+                MainWindow.Instance.SetBackButtonVisible(_folderId != null);
+
+                if (oldVal != _folderId)
+                {
+                    MainWindow.Instance.RefreshContent();
+                }
+            }
+        }
+        private static int? _folderId;
 
         int _initialRow = 0;
         int _initialColumn = 0;
@@ -72,9 +91,14 @@ namespace KEKWSoundboard.Pages
             }
         }
 
+        public void Back()
+        {
+            if (CurrentFolderId.HasValue)
+                CurrentFolderId = DatabaseManager.Instance.GetEntity(CurrentFolderId.Value).ParentId;
+        }
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.SetPageTitle("");
             FillDisplay();
         }
     }

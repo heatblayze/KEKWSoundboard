@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="/Themes/DarkTheme.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/Slider.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/TextBox.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/ComboBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <FontFamily x:Key="Cabin">pack://application:,,,/Resources/Fonts/#Cabin</FontFamily>
@@ -24,7 +25,7 @@
                 <Setter Property="BorderBrush" Value="{StaticResource Separator}"/>
                 <Setter Property="Background" Value="{StaticResource Separator}"/>
                 <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="CornerRadius" Value="10" />
             </Style>
 
             <Style TargetType="Border" x:Key="EntityBorder">
@@ -46,7 +47,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Grid x:Name="primaryGrid">
-                                <Border BorderBrush="{x:Null}" BorderThickness="1" CornerRadius="3" Background="{TemplateBinding Background}" OpacityMask="{TemplateBinding OpacityMask}">
+                                <Border Opacity="{TemplateBinding Opacity}" BorderBrush="{x:Null}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Background="{TemplateBinding Background}" OpacityMask="{TemplateBinding OpacityMask}">
                                     <Label Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                             </Grid>
@@ -61,6 +62,10 @@
                     <Trigger Property="IsPressed" Value="True">
                         <Setter Property="Background" Value="{StaticResource ButtonPressBackground}"/>
                     </Trigger>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Background" Value="{StaticResource ButtonDisabledBackground}"/>
+                        <Setter Property="Foreground" Value="{StaticResource DisabledTextBrush}"/>
+                    </Trigger>
                 </Style.Triggers>
             </Style>
 
@@ -70,6 +75,7 @@
 
             <Style TargetType="Button" x:Key="OverlayButton" BasedOn="{StaticResource NormalButton}">
                 <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Opacity" Value="0.8"/>
             </Style>
 
             <!--ImageToggle-->
@@ -103,6 +109,7 @@
                 <Setter Property="Foreground" Value="{StaticResource NormalTextBrush}"/>
                 <Setter Property="FontFamily" Value="{StaticResource Cabin}"/>
                 <Setter Property="FontWeight" Value="Regular"/>
+                <Setter Property="FontSize" Value="15"/>
             </Style>
 
             <!--Label-->

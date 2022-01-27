@@ -18,5 +18,8 @@ dotnet_diagnostic.CS8603.severity = none
 # CS8604: Possible null reference argument.
 dotnet_diagnostic.CS8604.severity = none
 
+# CS8600: Converting null literal or possible null value to non-nullable type.
+dotnet_diagnostic.CS8600.severity = none
+
 [*.{cs,vb}]
 dotnet_style_null_propagation=true:suggestion
